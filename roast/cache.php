@@ -71,7 +71,7 @@ class cache
 	{
 		if(!static::$_adapter)
 		{
-			return false;
+			return null;
 		}
 
 		return static::$_adapter->set($key, $value, $ttl);
@@ -121,7 +121,7 @@ class cache
 	{
 		if(!static::$_adapter)
 		{
-			return false;
+			return null;
 		}
 
 		return static::$_adapter->clear();
