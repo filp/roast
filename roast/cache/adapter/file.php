@@ -110,6 +110,11 @@ class file
 	{
 		$path = $this->_key_to_path($key);
 
+		if(isset($this->_cache[$key]))
+		{
+			return $this->_cache[$key];
+		}
+
 		if(!is_file($path))
 		{
 			return null;

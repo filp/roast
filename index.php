@@ -44,8 +44,7 @@ roast\app::run(
 		// apc, redis, file, or another custom adapter, mapped to
 		// cache/adapter/<adapter>
 		// alternatively, also accepts a compatible object instance.
-		
-		'cache.adapter'	  => 'file',
+		'cache.adapter'	  => 'apc',
 
 		// extra parameter examples for the redis cache adapter,
 		// uncomment as needed:
@@ -56,7 +55,7 @@ roast\app::run(
 		// extra parameter examples for the file-based cache adapter,
 		// uncomment as needed.
 		// NOTE: the file adapter currently has no time-to-live support.
-		'cache.adapter.file.root'  => __DIR__ . '/roast/cache/store', // needs to created and writable
-		'cache.adapter.file.prefix' => ''
+		// 'cache.adapter.file.root'  => __DIR__ . '/roast/cache/store', // needs to created and writable
+		// 'cache.adapter.file.prefix' => 'roast_'
 	)
 );
