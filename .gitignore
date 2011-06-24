@@ -1,0 +1,2 @@
+roast/cache/store/*
+!roast/cache/store/empty
