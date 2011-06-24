@@ -22,65 +22,13 @@
  *
  */
 
-namespace roast\cache\adapter;
+namespace roast\cache;
 
 /**
- * \roast\cache\adapter\apc
- * apc adapter for the roast cache
+ * \roast\cache\exception
  *
  * @author Filipe Dobreira <dobreira@gmail.com>
  * @copyright 2011 Filipe Dobreira
  * @version 1
  */
-class apc
-{
-	/**
-	 * set
-	 *
-	 * @see \roast\cache::set
-	 * @param string $key
-	 * @param mixed $value
-	 * @param int $ttl
-	 * @return bool
-	 */
-	public function set($key, $value, $ttl = 0)
-	{
-		return apc_store($key, $value, $ttl);
-	}
-
-	/**
-	 * get
-	 *
-	 * @see \roast\cache::get
-	 * @param string $key
-	 * @return mixed|null
-	 */
-	public function get($key)
-	{
-		return apc_fetch($key);
-	}
-
-
-	/**
-	 * del
-	 *
-	 * @see \roast\cache::del
-	 * @param string $key
-	 * @return bool
-	 */
-	public function del($key)
-	{
-		return apc_delete($key);
-	}
-
-	/**
-	 * clear
-	 *
-	 * @see \roast\cache::clear
-	 * @return bool
-	 */
-	public function clear()
-	{
-		return apc_clear_cache('user');
-	}
-}
+class exception extends \RuntimeException {}

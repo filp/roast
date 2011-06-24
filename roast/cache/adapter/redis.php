@@ -22,113 +22,100 @@
  *
  */
 
-namespace roast;
+namespace roast\cache\adapter;
+use roast\cache\exception;
+use roast\app;
 
 /**
- * \roast\cache makes your server happy(?)
+ * \roast\cache\adapter\redis
+ * redis adapter for the roast cache
+ * 
+ * IMPORTANT: requires phpredis:
+ * https://github.com/nicolasff/phpredis
  *
  * @author Filipe Dobreira <dobreira@gmail.com>
  * @copyright 2011 Filipe Dobreira
  * @version 1
  */
-class cache
+class redis
 {
 	/**
-	 * the active cache adapter
-	 * @var object
+	 * @var Redis
 	 */
-	private static $_adapter;
+	private $_redis;
 
 	/**
-	 * set_adapter
-	 * sets the cache adapter, from a string name
-	 * (mapped to \roast\cache\adapter\<name>) or a
-	 * compatible object.
+	 * __construct
 	 *
-	 * @param string|object $adapter
+	 * @return void
 	 */
-	public static function set_adapter($adapter)
+	public function __construct()
 	{
-		if(is_object($adapter))
+		if(!$params = app::cfg('cache.adapter.redis.host'))
 		{
-			return static::$_adapter = $adapter;
+			throw new exception('missing connection parameters: cache.adapter.redis.host');
 		}
-		
-		$adapter = '\\roast\\cache\\adapter\\' . $adapter;
-		return static::$_adapter = new $adapter;	
+
+		$this->_redis = new Redis();
+		if(!call_user_func(array($this->_redis, 'connect'), $params))
+		{
+			throw new exception('failed to open redis connection (params:' . print_r($params, true) .')');
+		}
 	}
 
 	/**
 	 * set
-	 * stores a new cache entry
 	 *
+	 * @see \roast\cache::set
 	 * @param string $key
 	 * @param mixed $value
-	 * @param int $ttl time-to-live in seconds, 0 is permanent
+	 * @param int $ttl
 	 * @return bool
 	 */
-	public static function set($key, $value, $ttl = 0)
+	public function set($key, $value, $ttl = 0)
 	{
-		if(!static::$_adapter)
+		if($ttl === 0)
 		{
-			return false;
+			return $this->_redis->set($key, $value);
 		}
 
-		return static::$_adapter->set($key, $value, $ttl);
+		return $this->_redis->setex($key, $ttl, $value);
 	}
 
 	/**
 	 * get
-	 * retrieves a cached entry by name
 	 *
+	 * @see \roast\cache::get
 	 * @param string $key
-	 * @return mixed|null null if not set or no adapter
+	 * @return mixed|null
 	 */
-	public static function get($key)
+	public function get($key)
 	{
-		if(!static::$_adapter)
-		{
-			return null;
-		}
-
-		return static::$_adapter->get($key);
+		// returns false if not set; which is turned to null for consistency.
+		return $this->_redis->get($key) ?: null;
 	}
 
 	/**
 	 * del
-	 * deletes a cache entry
 	 *
+	 * @see \roast\cache::del
 	 * @param string $key
 	 * @return bool
 	 */
-	public static function del($key)
+	public function del($key)
 	{
-		return static::$_adapter->del($key);
+		return $this->_redis->del($key);
 	}
 
 	/**
 	 * clear
-	 * completely empties the cache.
 	 *
+	 * @see \roast\cache::clear
 	 * @return bool
 	 */
-	public static function clear()
+	public function clear()
 	{
-		if(!static::$_adapter)
-		{
-			return false;
-		}
-
-		return static::$_adapter->clear();
-	}
-
-	/**
-	 * get_adapter_instance
-	 *
-	 * @return object|null
-	 */
-	public static function get_adapter_instance()
-	{
-		return static::$_adapter;
+		// need to look into this :I
+		return false;
 	}
 }
