@@ -30,6 +30,12 @@ require 'roast/app.php';
 roast\app::run(
 	array(
 
+		// an array of accepted http methods:
+		// request parameters are merged right to left,
+		// so for ('POST', 'GET'), GET params override
+		// the POST params.
+		'http.verbs.accept' => array('POST', 'GET'),
+
 		// the default output format:
 		'format.default'  => 'json',
 

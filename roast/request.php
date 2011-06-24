@@ -33,5 +33,20 @@ namespace roast;
  */
 class request
 {
-	
+	/**
+	 * @var array
+	 */
+	private $_http_headers;
+
+	/**
+	 * @var array
+	 */
+	private $_server;
+
+	/**
+	 * @var array
+	 */
+	private $_params;
+
+	// . . .
 }

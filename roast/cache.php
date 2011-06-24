@@ -103,6 +103,11 @@ class cache
 	 */
 	public static function del($key)
 	{
+		if(!static::$_adapter)
+		{
+			return null;
+		}
+		
 		return static::$_adapter->del($key);
 	}
 
