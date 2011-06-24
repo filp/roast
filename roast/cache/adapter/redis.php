@@ -56,7 +56,7 @@ class redis
 			throw new exception('missing connection parameters: cache.adapter.redis.host');
 		}
 
-		$this->_redis = new Redis();
+		$this->_redis = new \Redis();
 		if(!call_user_func(array($this->_redis, 'connect'), $params))
 		{
 			throw new exception('failed to open redis connection (params:' . print_r($params, true) .')');

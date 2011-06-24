@@ -44,13 +44,13 @@ roast\app::run(
 		// apc, redis, or another custom adapter, mapped to
 		// cache/adapter/<adapter>
 		// alternatively, also accepts a compatible object instance.
-		'cache.adapter'	  => 'apc',
+		'cache.adapter'	  => 'redis',
 
 		// extra parameter examples for the redis cache adapter,
 		// uncomment as needed:
-		// 'cache.adapter.redis.host' => array('127.0.0.1') // default to 6379
+		'cache.adapter.redis.host' => array('127.0.0.1') // default to 6379
 		// 'cache.adapter.redis.host' => array('127.0.0.1', 6379)
 		// 'cache.adapter.redis.host' => array('/tmp/redis.sock')
-		
+
 	)
 );
