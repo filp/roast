@@ -27,41 +27,56 @@ use roast\cache\exception;
 use roast\app;
 
 /**
- * \roast\cache\adapter\redis
- * redis adapter for the roast cache
- * 
- * IMPORTANT: requires phpredis:
- * https://github.com/nicolasff/phpredis
+ * \roast\cache\adapter\file
+ * file-based adapter for the roast cache
  *
  * @author Filipe Dobreira <dobreira@gmail.com>
  * @copyright 2011 Filipe Dobreira
  * @version 1
  */
-class redis
+class file
 {
+
 	/**
-	 * @var Redis
+	 * @var string the cache store root
 	 */
-	private $_redis;
+	private $_path;
+
+	/**
+	 * @var string
+	 */
+	private $_prefix;
+
+	/**
+	 * @var array
+	 */
+	private $_cache;
+
+	/**
+	 * _key_to_path
+	 *
+	 * @param string $key
+	 * @return string
+	 */
+	private function _key_to_path($key)
+	{
+		return $this->_path . '/' . $this->_prefix . '_' . substr(md5($key), 0, 18);
+	}
 
 	/**
 	 * __construct
 	 *
-	 * @throws \roast\cache\exception
 	 * @return void
 	 */
 	public function __construct()
-	{
-		if(!$params = app::cfg('cache.adapter.redis.host'))
+	{	
+		if(!$this->_path = (string) app::cfg('cache.adapter.file.root'))
 		{
-			throw new exception('missing connection parameters: cache.adapter.redis.host');
+			throw new exception('no cache.adapter.file.root parameter specified for the file adapter!');
 		}
 
-		$this->_redis = new \Redis();
-		if(!call_user_func(array($this->_redis, 'connect'), $params))
-		{
-			throw new exception('failed to open redis connection (params:' . print_r($params, true) .')');
-		}
+		$this->_prefix = (string) app::cfg('cache.adapter.file.prefix');
+		$this->_cache = array();
 	}
 
 	/**
@@ -75,12 +90,13 @@ class redis
 	 */
 	public function set($key, $value, $ttl = 0)
 	{
-		if($ttl === 0)
+		$path = $this->_key_to_path($key);
+		if(!file_put_contents($path, json_encode($value)))
 		{
-			return $this->_redis->set($key, $value);
+			return false;
 		}
 
-		return $this->_redis->setex($key, $ttl, $value);
+		return ( $this->_cache[$key] = $value );
 	}
 
 	/**
@@ -92,9 +108,21 @@ class redis
 	 */
 	public function get($key)
 	{
-		// returns false if not set; which is turned to null for consistency.
-		return $this->_redis->get($key) ?: null;
+		$path = $this->_key_to_path($key);
+
+		if(!is_file($path))
+		{
+			return null;
+		}
+
+		if(!$this->_cache[$key] = json_decode( file_get_contents($path), true))
+		{
+			return null;
+		}
+
+		return $this->_cache[$key];
 	}
+
 
 	/**
 	 * del
@@ -105,7 +133,7 @@ class redis
 	 */
 	public function del($key)
 	{
-		return $this->_redis->del($key);
+		return ( @unlink($this->_key_to_path($key)) );
 	}
 
 	/**
@@ -116,7 +144,6 @@ class redis
 	 */
 	public function clear()
 	{
-		// need to look into this :I
-		return false;
+		return false; // TO-DO
 	}
 }

@@ -41,16 +41,22 @@ roast\app::run(
 		// opaque on/off switch, all cache operations will return false/null.
 		'cache.enabled'   => true,  
 
-		// apc, redis, or another custom adapter, mapped to
+		// apc, redis, file, or another custom adapter, mapped to
 		// cache/adapter/<adapter>
 		// alternatively, also accepts a compatible object instance.
-		'cache.adapter'	  => 'redis',
+		
+		'cache.adapter'	  => 'file',
 
 		// extra parameter examples for the redis cache adapter,
 		// uncomment as needed:
-		'cache.adapter.redis.host' => array('127.0.0.1') // default to 6379
+		// 'cache.adapter.redis.host' => array('127.0.0.1') // default to 6379
 		// 'cache.adapter.redis.host' => array('127.0.0.1', 6379)
 		// 'cache.adapter.redis.host' => array('/tmp/redis.sock')
 
+		// extra parameter examples for the file-based cache adapter,
+		// uncomment as needed.
+		// NOTE: the file adapter currently has no time-to-live support.
+		'cache.adapter.file.root'  => __DIR__ . '/roast/cache/store', // needs to created and writable
+		'cache.adapter.file.prefix' => ''
 	)
 );
