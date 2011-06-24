@@ -20,43 +20,18 @@
  *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *	THE SOFTWARE.
  *
- * roast is a lightweight api service
+ */
+
+namespace roast;
+
+/**
+ * \roast\request 
  *
  * @author Filipe Dobreira <dobreira@gmail.com>
  * @copyright 2011 Filipe Dobreira
  * @version 1
  */
-require 'roast/app.php';
-roast\app::run(
-	array(
-
-		// the default output format:
-		'format.default'  => 'json',
-
-		// an array of accepted output formats, mapped 
-		// to format/adapter/<format> classes.
-		'format.accept'   => 
-			array( 'json', 'serialize', 'print_r' ),
-		
-		// opaque on/off switch, all cache operations will return false/null.
-		'cache.enabled'   => true,  
-
-		// apc, redis, file, or another custom adapter, mapped to
-		// cache/adapter/<adapter>
-		// alternatively, also accepts a compatible object instance.
-		'cache.adapter'	  => 'apc',
-
-		// extra parameter examples for the redis cache adapter,
-		// uncomment as needed:
-		// 'cache.adapter.redis.host' => array('127.0.0.1') // default to 6379
-		// 'cache.adapter.redis.host' => array('127.0.0.1', 6379)
-		// 'cache.adapter.redis.host' => array('/tmp/redis.sock')
-
-		// extra parameter examples for the file-based cache adapter,
-		// uncomment as needed.
-		// NOTE: the file adapter currently has no time-to-live support.
-		// 'cache.adapter.file.root'  => __DIR__ . '/roast/cache/store', // needs to created and writable
-		// 'cache.adapter.file.prefix' => 'roast_'
-
-	)
-);
+class request
+{
+	
+}

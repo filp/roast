@@ -36,7 +36,6 @@ use roast\app;
  */
 class file
 {
-
 	/**
 	 * @var string the cache store root
 	 */
@@ -138,6 +137,7 @@ class file
 	 */
 	public function del($key)
 	{
+		unset($this->_cache[$key]);
 		return ( @unlink($this->_key_to_path($key)) );
 	}
 
